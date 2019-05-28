@@ -16,7 +16,7 @@ export default class Recipe {
         }
         catch (error){
             console.log(error);
-            alert(`Something went wrong :()`);
+            alert(`Something went wrong :(`);
         }
 
     }
@@ -31,8 +31,12 @@ export default class Recipe {
     }
 
     parseIngredients(){
-        const unitsLong = ['tablespoons','tablespon','ounces','ounce','teaspoon','teaspoons','cups','pounds'];
-        const unitsShort = ['tbsp','tbsp','oz','oz','tsp','tsp','cup','pound']
+        const unitsLong = ['tablespoons','tablespoon','ounces','ounce','teaspoons','teaspoon','cups','pounds'];
+        const unitsShort = ['tbsp','tbsp','oz','oz','tsp','tsp','cup','pound'];
+        
+        //Deconstruct objects, add unitShort  elements to a new array
+        const units = [...unitsShort,'kg','g'];
+
         const newIngredients = this.ingredients.map( el => {
             // 1) Transform units
             let ingredient = el.toLowerCase();
@@ -47,7 +51,7 @@ export default class Recipe {
             const arrIng = ingredient.split(' ');
 
             //Check to see if any element of the array has any unit name 
-            const unitIndex = arrIng.findIndex(el2 => unitsShort.includes(el2));
+            const unitIndex = arrIng.findIndex(el2 => units.includes(el2));
 
             let objIng;
             if (unitIndex > -1){
@@ -55,8 +59,10 @@ export default class Recipe {
                 //Ex. 4 1/2 cups arrCount is [4,1 /2]
                 //Ex. 4 cups, arrCount is [4]
                 const arrCount = arrIng.slice(0, unitIndex);
+
+                let count;
                 if (arrCount.length === 1){
-                    count = arrIng[0].replace('-','+');
+                    count = eval(arrIng[0].replace('-','+'));
                 }
                 else{
                     //eval(4+1/2) = 4.5
